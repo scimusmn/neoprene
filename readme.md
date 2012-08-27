@@ -1,4 +1,4 @@
-# Neoprene : Tasks to deploy and administer Drupal websites using Fabric
+# Neoprene : Deploy & administer Drupal websites using Fabric
 
 ## Usage
 * Include this module in your application's fabfile to utilize these Drupal specific tasks.
