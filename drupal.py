@@ -14,11 +14,11 @@ def db_backup(directory):
                       '[\d]*\.[\d]* ms\.[\s]*\[success\]',
                       o
                     )
-        file = r.group(1) ".mysql.gz"
+        file = r.group(1) + ".mysql.gz"
         o = run("drush vget file_private_path")
         r = re.match('file_private_path: "([^"]*)"', o)
-        path = r.group(1) "/backup_migrate/manual/"
-        filepath = directory path file
+        path = r.group(1) + "/backup_migrate/manual/"
+        filepath = directory + path + file
         return filepath
 
 def clear_cache():
