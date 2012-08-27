@@ -14,3 +14,8 @@ def bam_backup(directory):
                     )
         backup_file = r.group(1)
 
+def drupal_clear_cache():
+    """
+    Clear the database cache on a Drupal website
+    """
+    run("drush cache-clear")
