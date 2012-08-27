@@ -1,4 +1,4 @@
-def bam_backup(directory):
+def db_backup(directory):
     """
     Uses drush and the Backup and Migrate modual to make sql dump of the
     database for the spcified site.
@@ -14,8 +14,10 @@ def bam_backup(directory):
                     )
         backup_file = r.group(1)
 
-def drupal_clear_cache():
+def clear_cache():
     """
     Clear the database cache on a Drupal website
     """
     run("drush cache-clear")
+
+
