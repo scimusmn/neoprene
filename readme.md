@@ -1,5 +1,8 @@
 # Neoprene : Deploy & administer Drupal websites using Fabric
 
+## Warning
+This is alpha code and is actively being developed and might break your systems. Please test before using on your systems.
+
 ## Usage
 * Include this module in your application's fabfile to utilize these Drupal specific tasks.
 
