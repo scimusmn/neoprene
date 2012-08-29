@@ -1,3 +1,23 @@
+from fabric.api import *
+from fabric.contrib.console import confirm
+
+def which_download_app():
+    """
+    Find the path to a download application, prefering wget.
+    Abort if neither is found
+    """
+    with settings(warn_only=True):
+        with hide('running', 'stdout', 'stderr', 'warnings'):
+            path = local("which wget", True)
+            if path.return_code != 1:
+                return path
+            else:
+                path = local("which curl", True)
+                if path.return_code != 1:
+                    return path + " -O"
+                else:
+                    abort("Please install wget or curl on your local system.")
+
 def db_backup(directory):
     """
     Uses drush and the Backup and Migrate modual to make sql dump of the
@@ -21,10 +41,11 @@ def db_backup(directory):
         filepath = directory + path + file
         return filepath
 
-def clear_cache():
+def get_db_dump():
     """
-    Clear the database cache on a Drupal website
+    Download a db dump from the Backup and Migrate folder on a website.
     """
-    run("drush cache-clear")
+    app = which_download_app()
+    local("%s http://en.wikipedia.org/wiki/Neil_Armstrong" % app)
 
 
