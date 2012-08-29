@@ -18,7 +18,8 @@ def _which_download_app():
                 else:
                     abort("Please install wget or curl on your local system.")
 
-def db_backup(directory):
+@task
+def remote_db_dump(directory):
     """
     Uses Drush and the Backup and Migrate module to make a SQL dump of the
     database for the spcified site.
@@ -26,7 +27,7 @@ def db_backup(directory):
     Returns the full filepath to the backup
 
     Usage:
-        fab -H deployuser@example.com db_backup:'/path/to/drupal/site/root'
+        fab -H deployuser@example.com remote_db_dump:'/path/to/drupal/site/root'
     """
     with cd(directory):
         o = run("drush bam-backup")
