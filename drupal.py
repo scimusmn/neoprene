@@ -5,8 +5,7 @@ import re
 
 # Degug code for development.
 # This should eventually come out.
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
+from pprint import pprint
 
 def _which_download_app():
     """
