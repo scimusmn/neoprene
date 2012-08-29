@@ -73,7 +73,7 @@ def clone_db_remote_to_local(directory):
     Usage:
         fab -H deployuser@example.com clone_remote_db:'/path/to/drupal/site/root'
     """
-    path = remote_db_backup(directory)
+    path = remote_db_dump(directory)
     sql_file = get_db_dump(path)
     # Ask the user for a clean database
     # Check that the database is clean
