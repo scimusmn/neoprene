@@ -48,4 +48,7 @@ def get_db_dump():
     app = which_download_app()
     local("%s http://en.wikipedia.org/wiki/Neil_Armstrong" % app)
 
+def clear_cache():
+    """ Clear the database cache on a Drupal website """
+    run("drush cache-clear")
 
