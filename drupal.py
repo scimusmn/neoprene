@@ -89,7 +89,9 @@ def pull_db(directory):
         fab -H deployuser@example.com pull_db:'/path/to/drupal/site/root'
     """
     path = remote_db_dump(directory)
-    get(path,"~/")
+    localpath = get(path,"~/")
+    local("gunzip %s" % localpath[0])
+
     # Ask the user for a clean database
     # Check that the database is clean
     # import_db_local(sql_file)
