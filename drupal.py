@@ -56,12 +56,14 @@ def remote_db_dump(directory):
                      '[\d]*\.[\d]* ms.',
                      r
                     )
-        file = r.group(1) + ".mysql.gz"
-        o = run("drush vget file_private_path")
-        r = re.match('file_private_path: "([^"]*)"', o)
-        path = r.group(1) + "/backup_migrate/manual/"
-        filepath = directory + path + file
-        return filepath
+        filename = r.group(1) + ".mysql.gz"
+        file_private_path = run("drush vget file_private_path")
+        # Remove quotes around the variable
+        r = re.match('file_private_path: "([^"]*)"', file_private_path)
+        bam_path = r.group(1) + "/backup_migrate/manual/"
+        with cd(bam_path):
+            bam_filepath = env.cwd + file
+            return bam_filepath
 
 @task
 def get_db_dump(directory):
