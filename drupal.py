@@ -45,14 +45,36 @@ def remote_db_dump(directory):
         filepath = directory + path + file
         return filepath
 
-def get_db_dump():
+@task
+def get_db_dump(directory):
     """
     Download a db dump from the Backup and Migrate folder on a website.
     """
     app = _which_download_app()
     local("%s http://en.wikipedia.org/wiki/Neil_Armstrong" % app)
 
+@task
+def import_db_local(sql_file):
+    """
+    Import a SQL file into a local database
+    """
+    local("mysql database_name < sql_file.sql")
+
+@task
+def clone_db_remote_to_local(directory):
+    """
+    Get a copy of a remote website's db on your local machine.
+
+    Usage:
+        fab -H deployuser@example.com clone_remote_db:'/path/to/drupal/site/root'
+    """
+    path = remote_db_backup(directory)
+    sql_file = get_db_dump(path)
+    # Ask the user for a clean database
+    # Check that the database is clean
+    import_db_local(sql_file)
+
+@task
 def clear_cache():
     """ Clear the database cache on a Drupal website """
     run("drush cache-clear")
-
