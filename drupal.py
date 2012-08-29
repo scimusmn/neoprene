@@ -1,7 +1,7 @@
 from fabric.api import *
 from fabric.contrib.console import confirm
 
-def which_download_app():
+def _which_download_app():
     """
     Find the path to a download application, prefering wget.
     Abort if neither is found.
@@ -48,7 +48,7 @@ def get_db_dump():
     """
     Download a db dump from the Backup and Migrate folder on a website.
     """
-    app = which_download_app()
+    app = _which_download_app()
     local("%s http://en.wikipedia.org/wiki/Neil_Armstrong" % app)
 
 def clear_cache():
