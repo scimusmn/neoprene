@@ -4,7 +4,7 @@ from fabric.contrib.console import confirm
 def which_download_app():
     """
     Find the path to a download application, prefering wget.
-    Abort if neither is found
+    Abort if neither is found.
     """
     with settings(warn_only=True):
         with hide('running', 'stdout', 'stderr', 'warnings'):
@@ -20,10 +20,13 @@ def which_download_app():
 
 def db_backup(directory):
     """
-    Uses drush and the Backup and Migrate modual to make sql dump of the
+    Uses Drush and the Backup and Migrate module to make a SQL dump of the
     database for the spcified site.
 
     Returns the full filepath to the backup
+
+    Usage:
+        fab -H deployuser@example.com db_backup:'/path/to/drupal/site/root'
     """
     with cd(directory):
         o = run("drush bam-backup")
