@@ -1,6 +1,11 @@
 from fabric.api import *
 from fabric.contrib.console import confirm
 
+# Degug code for development.
+# This should eventually come out.
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
 def _which_download_app():
     """
     Find the path to a download application, prefering wget.
