@@ -80,12 +80,12 @@ def import_db_local(sql_file):
     local("mysql database_name < sql_file.sql")
 
 @task
-def clone_db_remote_to_local(directory):
+def pull_db(directory):
     """
     Get a copy of a remote website's db on your local machine.
 
     Usage:
-        fab -H deployuser@example.com clone_remote_db:'/path/to/drupal/site/root'
+        fab -H deployuser@example.com pull_db:'/path/to/drupal/site/root'
     """
     path = remote_db_dump(directory)
     pp.pprint(path)
