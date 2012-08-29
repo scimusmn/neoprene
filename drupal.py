@@ -92,7 +92,7 @@ def pull_db(directory):
     get(path,"~/")
     # Ask the user for a clean database
     # Check that the database is clean
-    import_db_local(sql_file)
+    # import_db_local(sql_file)
 
 @task
 def clear_cache():
