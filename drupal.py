@@ -1,6 +1,8 @@
 from fabric.api import *
 from fabric.contrib.console import confirm
 
+import re
+
 # Degug code for development.
 # This should eventually come out.
 import pprint
@@ -23,6 +25,18 @@ def _which_download_app():
                 else:
                     abort("Please install wget or curl on your local system.")
 
+def _cleanup_drush_output(o):
+    """
+    Cleanup drush output to get raw message string.
+    """
+    # Remove linebreaks
+    r = ' '.join(o.splitlines())
+    # Remove Drush decoration which can showup anywhere in the message
+    r = re.sub('\[success\]', '', r)
+    # Remove extraneous white space
+    r = re.sub('\s+', ' ', r)
+    return r
+
 @task
 def remote_db_dump(directory):
     """
@@ -36,12 +50,12 @@ def remote_db_dump(directory):
     """
     with cd(directory):
         o = run("drush bam-backup")
+        r = _cleanup_drush_output(o)
         # Get the backup filename from the response
-        r = re.match('Default Database backed up successfully to '
-                      '([^\s]*) '
-                      'in destination Manual Backups Directory in '
-                      '[\d]*\.[\d]* ms\.[\s]*\[success\]',
-                      o
+        r = re.match('Default Database backed up successfully to ([^\s]*) '
+                     'in destination Manual Backups Directory in '
+                     '[\d]*\.[\d]* ms.',
+                     r
                     )
         file = r.group(1) + ".mysql.gz"
         o = run("drush vget file_private_path")
