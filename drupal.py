@@ -7,6 +7,10 @@ import re
 # This should eventually come out.
 from pprint import pprint
 
+def _header(txt):
+    wrapper = "------------------------------------------------------"
+    return wrapper + "\n" + txt + "\n" + wrapper
+
 def _which_download_app():
     """
     Find the path to a download application, prefering wget.
@@ -88,9 +92,25 @@ def pull_db(directory):
     Usage:
         fab -H deployuser@example.com pull_db:'/path/to/drupal/site/root'
     """
+    txt = "Getting a database backup of your remote site."
+    print
+    print _header(txt)
+    print
+
     path = remote_db_dump(directory)
     localpath = get(path,"~/")
     local("gunzip %s" % localpath[0])
+
+    print
+    txt = "Importing the database on your local machine."
+    print
+    print _header(txt)
+    print
+
+    txt = "What would you like to call you local database?"
+    local_database = prompt(txt)
+
+    pprint(local_database)
 
     # Ask the user for a clean database
     # Check that the database is clean
