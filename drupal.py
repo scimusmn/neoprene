@@ -114,6 +114,6 @@ def pull_db(directory):
     # import_db_local(sql_file)
 
 @task
-def clear_cache():
+def cache_clear():
     """ Clear the database cache on a Drupal website """
     run("drush cache-clear")
