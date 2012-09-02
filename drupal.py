@@ -101,7 +101,6 @@ def pull_db(directory):
     localpath = get(path,"~/")
     local("gunzip %s" % localpath[0])
 
-    print
     txt = "Importing the database on your local machine."
     print
     print _header(txt)
