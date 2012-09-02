@@ -70,15 +70,7 @@ def remote_db_dump(directory):
             return bam_filepath
 
 @task
-def get_db_dump(directory):
-    """
-    Download a db dump from the Backup and Migrate folder on a website.
-    """
-    app = _which_download_app()
-    local("%s http://en.wikipedia.org/wiki/Neil_Armstrong" % app)
-
-@task
-def import_db_local(sql_file):
+def local_db_import(sql_file):
     """
     Import a SQL file into a local database
     """
@@ -111,6 +103,7 @@ def pull_db(directory):
 
     pprint(local_database)
 
+    local_db_import(local_database)
     # Ask the user for a clean database
     # Check that the database is clean
     # import_db_local(sql_file)
