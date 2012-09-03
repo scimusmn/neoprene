@@ -1,4 +1,4 @@
-from fabric.api import (abort, capture, cd, env, hide, get, local, prompt, run,
+from fabric.api import (abort, cd, env, hide, get, local, prompt, run,
                         settings, task)
 import re
 
