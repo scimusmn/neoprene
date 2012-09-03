@@ -5,7 +5,7 @@ import re
 
 # Degug code for development.
 # This should eventually come out.
-from pprint import pprint
+#from pprint import pprint
 
 
 def _header(txt):
