@@ -1,5 +1,6 @@
 from fabric.api import (abort, cd, env, hide, get, local, prompt, run,
                         settings, task)
+from contextlib import contextmanager
 import re
 
 # Degug code for development.
@@ -10,6 +11,17 @@ from pprint import pprint
 def _header(txt):
     wrapper = "------------------------------------------------------"
     return wrapper + "\n" + txt + "\n" + wrapper
+
+
+@contextmanager
+def _mute():
+    """
+    Run a fabric command without reporting any responses to the user.
+    """
+    with settings(warn_only='true'):
+        with hide('running', 'stdout', 'stderr', 'warnings'):
+            yield
+
 
 def _which_download_app():
     """
@@ -84,6 +96,31 @@ def local_db_import(sql_file):
     """
     local("mysql database_name < sql_file.sql")
 
+
+def db_create(place, db_name):
+    """
+    Try to create a database.
+
+    We'll be conservative here and just let the task fail if a database
+    already exists with the same name.
+    """
+    create = 'mysqladmin create %s' % (db_name)
+    if place == 'remote':
+        o = run(create)
+    if place == 'local':
+        with settings(warn_only=True):
+            o = local(create, True)
+            #return_code, stderr, failed and succeeded
+            print "--return_code--"
+            pprint(o.return_code)
+            print "--stderr--"
+            pprint(o.stderr)
+            print "--failed--"
+            pprint(o.failed)
+            print "--succeded--"
+            pprint(o.succeded)
+
+
 @task
 def pull_db(directory):
     """
@@ -98,23 +135,40 @@ def pull_db(directory):
     print
 
     path = remote_db_dump(directory)
-    localpath = get(path,"~/")
+    localpath = get(path, "~/")
     local("gunzip %s" % localpath[0])
 
     txt = "Importing the database on your local machine."
     print
     print _header(txt)
-    print
 
+    print """
+Since you didn't define local database credentials
+I'm assuming some MySQL defaults:
+"""
+    with _mute():
+        mysql_u = local('whoami', True)
+    print "username: %s" % mysql_u
+    print "password: defined in ~/.my.conf"
+    print "host: localhost"
+
+    #, I'm using your
+#current system username to access MySQL. I'm also assuming
+#that the password is defined in ~/.my.conf.
+
+#Define the MySQL credential arguments to override this behavior.
+#"""
+
+    # Ask the user for a clean database
     txt = "What would you like to call you local database?"
     local_database = prompt(txt)
 
-    pprint(local_database)
-
-    local_db_import(local_database)
-    # Ask the user for a clean database
     # Check that the database is clean
-    # import_db_local(sql_file)
+    db_create('local', local_database)
+
+    # Find the name of the local sql file
+    # local_db_import(sql_file)
+
 
 @task
 def cache_clear():
