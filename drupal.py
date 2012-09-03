@@ -88,11 +88,18 @@ def remote_db_dump(directory):
 
 
 @task
-def local_db_import(sql_file):
+def local_db_import(local_db_name, local_sql_file, local_db_host='localhost',
+                    local_db_user=None, local_db_pass=None):
     """
     Import a SQL file into a local database
     """
-    local("mysql database_name < sql_file.sql")
+    with _mute():
+        db_import_cmd = "mysql -h %s -u %s" % (local_db_host, local_db_user)
+        if local_db_pass is not None:
+            db_import_cmd = db_import_cmd + " -p %s" % local_db_pass
+        db_import_cmd = db_import_cmd + " %s < %s" % (local_db_name,
+                                                      local_sql_file)
+        local(db_import_cmd)
 
 
 def db_create(place, db_name, db_host, db_user, db_pass):
@@ -151,8 +158,10 @@ def pull_db(directory, local_db_host='localhost', local_db_user=None,
     print
 
     path = remote_db_dump(directory)
-    localpath = get(path, "~/")
-    local("gunzip %s" % localpath[0])
+    localpath = get(path, "/tmp")
+    gz_file = localpath[0]
+    local("gunzip %s" % gz_file)
+    sql_file = re.sub('\.gz$', '', gz_file)
 
     txt = "Importing the database on your local machine."
     print
@@ -170,11 +179,19 @@ def pull_db(directory, local_db_host='localhost', local_db_user=None,
     else:
         print "  password: ***"
 
-    # Try to create a database
-    interactive_create_db('local', local_db_host, local_db_user, local_db_pass)
+    # Create and import db
+    db_name = interactive_create_db('local', local_db_host, local_db_user,
+                                    local_db_pass)
+    print
+    print "Importing the database..."
+    local_db_import(db_name, sql_file, local_db_host, local_db_user,
+                    local_db_pass)
+    print
+    print "...done. Your database, %s is ready to go." % (db_name)
 
-    # Find the name of the local sql file
-    # local_db_import(sql_file)
+    print
+    print "Cleaning up."
+    local("rm -f sql_file")
 
 
 @task
