@@ -28,17 +28,16 @@ def _which_download_app():
     Find the path to a download application, prefering wget.
     Abort if neither is found.
     """
-    with settings(warn_only=True):
-        with hide('running', 'stdout', 'stderr', 'warnings'):
-            path = local("which wget", True)
+    with _mute():
+        path = local("which wget", True)
+        if path.return_code != 1:
+            return path
+        else:
+            path = local("which curl", True)
             if path.return_code != 1:
-                return path
+                return path + " -O"
             else:
-                path = local("which curl", True)
-                if path.return_code != 1:
-                    return path + " -O"
-                else:
-                    abort("Please install wget or curl on your local system.")
+                abort("Please install wget or curl on your local system.")
 
 
 def _cleanup_drush_output(o):
@@ -77,12 +76,11 @@ def remote_db_dump(directory):
         bam_filename = r.group(1) + ".mysql.gz"
 
         # No need to show this to the users
-        with settings(warn_only=True):
-            with hide('running', 'stdout', 'stderr', 'warnings'):
-                file_private_path = run("drush vget file_private_path")
-                # Remove quotes around the variable
-                r = re.match('file_private_path: "([^"]*)"', file_private_path)
-                bam_path = r.group(1) + "/backup_migrate/manual/"
+        with _mute():
+            file_private_path = run("drush vget file_private_path")
+            # Remove quotes around the variable
+            r = re.match('file_private_path: "([^"]*)"', file_private_path)
+            bam_path = r.group(1) + "/backup_migrate/manual/"
 
         with cd(bam_path):
             bam_filepath = env.cwd + bam_filename
@@ -108,7 +106,7 @@ def db_create(place, db_name):
     if place == 'remote':
         o = run(create)
     if place == 'local':
-        with settings(warn_only=True):
+        with _mute():
             o = local(create, True)
             #return_code, stderr, failed and succeeded
             print "--return_code--"
