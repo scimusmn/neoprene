@@ -95,16 +95,16 @@ def local_db_import(sql_file):
     local("mysql database_name < sql_file.sql")
 
 
-def db_create(place, db_name, dbh, dbu, dbp):
+def db_create(place, db_name, db_host, db_user, db_pass):
     """
     Try to create a database.
 
     We'll be conservative here and just let the task fail if a database
     already exists with the same name.
     """
-    create = 'mysqladmin create %s -h %s -u %s' % (db_name, dbh, dbu)
-    if dbp is not None:
-        create = create + " -p %s" % dbp
+    create = 'mysqladmin create %s -h %s -u %s' % (db_name, db_host, db_user)
+    if db_pass is not None:
+        create = create + " -p %s" % db_pass
     if place == 'remote':
         pass
         #o = run(create)
@@ -114,7 +114,7 @@ def db_create(place, db_name, dbh, dbu, dbp):
     return db_response
 
 
-def interactive_create_db(place, ldbh, ldbu, ldbp):
+def interactive_create_db(place, db_host, db_user, db_pass):
     """
     Keep asking the user for a database name until the
     db_create function stops returning errors.
@@ -124,18 +124,21 @@ def interactive_create_db(place, ldbh, ldbu, ldbp):
         # Ask the user for a clean database
         txt = "What would you like to call you local database?"
         print
-        local_database = prompt(txt)
-        db_response = db_create(place, local_database, ldbh, ldbu, ldbp)
+        db_name = prompt(txt)
+        db_response = db_create(place, db_name, db_host, db_user,
+                                db_pass)
         if db_response.return_code == 1:
             print db_response.stderr
             print
             print "Try again...or CTRL-C to exit."
         else:
             error_code = db_response.return_code
+    return db_name
 
 
 @task
-def pull_db(directory, ldbh='localhost', ldbu=None, ldbp=None):
+def pull_db(directory, local_db_host='localhost', local_db_user=None,
+            local_db_pass=None):
     """
     Get a copy of a remote website's db on your local machine.
 
@@ -155,20 +158,20 @@ def pull_db(directory, ldbh='localhost', ldbu=None, ldbp=None):
     print
     print _header(txt)
 
-    if ldbu is None:
+    if local_db_user is None:
         with _mute():
-            ldbu = local('whoami', True)
+            local_db_user = local('whoami', True)
 
     print "Writing to your local database using these credentials:"
-    print "  hostname: %s" % ldbh
-    print "  username: %s" % ldbu
-    if ldbp is None:
+    print "  hostname: %s" % local_db_host
+    print "  username: %s" % local_db_user
+    if local_db_pass is None:
         print "  password: defined in ~/.my.conf"
     else:
         print "  password: ***"
 
     # Try to create a database
-    interactive_create_db('local', ldbh, ldbu, ldbp)
+    interactive_create_db('local', local_db_host, local_db_user, local_db_pass)
 
     # Find the name of the local sql file
     # local_db_import(sql_file)
