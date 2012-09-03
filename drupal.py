@@ -1,11 +1,11 @@
-from fabric.api import *
-from fabric.contrib.console import confirm
-
+from fabric.api import (abort, capture, cd, env, hide, get, local, prompt, run,
+                        settings, task)
 import re
 
 # Degug code for development.
 # This should eventually come out.
 from pprint import pprint
+
 
 def _header(txt):
     wrapper = "------------------------------------------------------"
@@ -28,6 +28,7 @@ def _which_download_app():
                 else:
                     abort("Please install wget or curl on your local system.")
 
+
 def _cleanup_drush_output(o):
     """
     Cleanup drush output to get raw message string.
@@ -40,6 +41,7 @@ def _cleanup_drush_output(o):
     r = re.sub('\s+', ' ', r)
     return r
 
+
 @task
 def remote_db_dump(directory):
     """
@@ -49,7 +51,7 @@ def remote_db_dump(directory):
     Returns the full filepath to the backup
 
     Usage:
-        fab -H deployuser@example.com remote_db_dump:'/path/to/drupal/site/root'
+        fab -H deployuser@example.com remote_db_dump:'/site/path/'
     """
     with cd(directory):
         o = run("drush bam-backup")
@@ -73,6 +75,7 @@ def remote_db_dump(directory):
         with cd(bam_path):
             bam_filepath = env.cwd + bam_filename
             return bam_filepath
+
 
 @task
 def local_db_import(sql_file):
