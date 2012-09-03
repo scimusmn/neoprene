@@ -95,32 +95,47 @@ def local_db_import(sql_file):
     local("mysql database_name < sql_file.sql")
 
 
-def db_create(place, db_name):
+def db_create(place, db_name, dbh, dbu, dbp):
     """
     Try to create a database.
 
     We'll be conservative here and just let the task fail if a database
     already exists with the same name.
     """
-    create = 'mysqladmin create %s' % (db_name)
+    create = 'mysqladmin create %s -h %s -u %s' % (db_name, dbh, dbu)
+    if dbp is not None:
+        create = create + " -p %s" % dbp
     if place == 'remote':
-        o = run(create)
+        pass
+        #o = run(create)
     if place == 'local':
         with _mute():
-            o = local(create, True)
-            #return_code, stderr, failed and succeeded
-            print "--return_code--"
-            pprint(o.return_code)
-            print "--stderr--"
-            pprint(o.stderr)
-            print "--failed--"
-            pprint(o.failed)
-            print "--succeded--"
-            pprint(o.succeded)
+            db_response = local(create, True)
+    return db_response
+
+
+def interactive_create_db(place, ldbh, ldbu, ldbp):
+    """
+    Keep asking the user for a database name until the
+    db_create function stops returning errors.
+    """
+    error_code = 1
+    while error_code == 1:
+        # Ask the user for a clean database
+        txt = "What would you like to call you local database?"
+        print
+        local_database = prompt(txt)
+        db_response = db_create(place, local_database, ldbh, ldbu, ldbp)
+        if db_response.return_code == 1:
+            print db_response.stderr
+            print
+            print "Try again...or CTRL-C to exit."
+        else:
+            error_code = db_response.return_code
 
 
 @task
-def pull_db(directory):
+def pull_db(directory, ldbh='localhost', ldbu=None, ldbp=None):
     """
     Get a copy of a remote website's db on your local machine.
 
@@ -140,29 +155,20 @@ def pull_db(directory):
     print
     print _header(txt)
 
-    print """
-Since you didn't define local database credentials
-I'm assuming some MySQL defaults:
-"""
-    with _mute():
-        mysql_u = local('whoami', True)
-    print "username: %s" % mysql_u
-    print "password: defined in ~/.my.conf"
-    print "host: localhost"
+    if ldbu is None:
+        with _mute():
+            ldbu = local('whoami', True)
 
-    #, I'm using your
-#current system username to access MySQL. I'm also assuming
-#that the password is defined in ~/.my.conf.
+    print "Writing to your local database using these credentials:"
+    print "  hostname: %s" % ldbh
+    print "  username: %s" % ldbu
+    if ldbp is None:
+        print "  password: defined in ~/.my.conf"
+    else:
+        print "  password: ***"
 
-#Define the MySQL credential arguments to override this behavior.
-#"""
-
-    # Ask the user for a clean database
-    txt = "What would you like to call you local database?"
-    local_database = prompt(txt)
-
-    # Check that the database is clean
-    db_create('local', local_database)
+    # Try to create a database
+    interactive_create_db('local', ldbh, ldbu, ldbp)
 
     # Find the name of the local sql file
     # local_db_import(sql_file)
