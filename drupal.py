@@ -75,12 +75,10 @@ def remote_db_dump(directory):
                     )
         bam_filename = r.group(1) + ".mysql.gz"
 
-        # No need to show this to the users
+        # Get the path to the Drupal files directory, silently
         with _mute():
-            file_private_path = run("drush vget file_private_path")
-            # Remove quotes around the variable
-            r = re.match('file_private_path: "([^"]*)"', file_private_path)
-            bam_path = r.group(1) + "/backup_migrate/manual/"
+            drupal_files_path = run("drush dd files")
+            bam_path = drupal_files_path + "/backup_migrate/manual/"
 
         with cd(bam_path):
             bam_filepath = env.cwd + bam_filename
