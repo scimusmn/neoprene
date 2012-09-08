@@ -100,6 +100,19 @@ def local_db_import(local_db_name, local_sql_file, local_db_host='localhost',
         local(db_import_cmd)
 
 
+@task
+def local_db_list(batch=False):
+    """
+    List databases. If desired print the output in MySQL's batch Modernizr
+    which will not print table decoration.
+    """
+    if batch == 'True':
+        batch_option = '--batch '
+    else:
+        batch_option = ''
+    local('mysql %s-e "show databases;"' % batch_option)
+
+
 def db_create(place, db_name, db_host, db_user, db_pass):
     """
     Try to create a database.
