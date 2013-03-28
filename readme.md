@@ -10,7 +10,15 @@ This is alpha code and is actively being developed and might break your systems.
 * [Fabric](http://docs.fabfile.org) is a Python library for application deployment and system administration tasks. [Neoprene](https://github.com/scimusmn/neoprene) is a library that aids in common [Drupal](http://www.drupal.org) deployment and system administration tasks, using Fabric.
 * Neoprene assumes you have [Drush](http://drupal.org/project/drush) installed on your remote and local systems.
 
-<!--## Install (required)-->
+## Install (required)
+As of 2013_03_28 you'll need the latest dev version of Fabric. There's a bug in the latest solid release that makes `sed` not work on a Mac.
+
+To install the dev version do:
+
+    pip install paramiko==dev
+    pip install fabric==dev
+
+Paramiko is a Python SSH library.
 <!--Coming soon-->
 
 <!--## TODO-->
