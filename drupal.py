@@ -1,5 +1,7 @@
-from fabric.api import (abort, cd, env, hide, get, local, prompt, run,
-                        settings, task)
+from fabric.api import (abort, cd, env, hide, get, local, prompt,
+                        run, settings, task)
+from fabric.contrib.files import (contains, exists, sed)
+
 from contextlib import contextmanager
 import re
 
@@ -114,6 +116,141 @@ def local_db_list(batch=False):
     else:
         batch_option = ''
     local('mysql %s-e "show databases;"' % batch_option)
+
+
+@task
+def download_drupal(parent, name=None):
+    """Download the latest Drupal project
+
+    Args:
+        parent: Parent directory where the site will be created
+        name: Directory name for the site. Defaults to the Drupal project name
+
+    Usage:
+        fab -H localhost download_drupal:'/path/to/web/dir','vanilla'
+    """
+    with cd(parent):
+        if name:
+            run("drush dl")
+        else:
+            run("drush dl --drupal-project-rename=%s" % name)
+
+
+@task
+def setup_files(path):
+    """
+    Setup the Drupal files directory
+
+    Usage:
+        fab -H localhost setup_files:'/path/to/site'
+    """
+    with cd(path):
+        # Setup files
+        run("mkdir -p sites/default/files/private")
+        #run("chown -R apache:www sites/default/files")
+        run("chmod -R g+ws sites/default/files")
+
+
+@task
+def setup_settings(path, db_name):
+    """
+    Setup the Drupal settings.php file
+
+    Usage:
+        fab -H localhost setup_settings:'/path/to/site'
+    """
+    path = path + '/sites/default'
+    with cd(path):
+        run("cp -v default.settings.php settings.php")
+        # Assume you've set your MySQL info in ~/.my.cnf
+        # TODO Build MySQL URL from inputs
+        mysql_url = 'mysql://bkennedy:flash6,milm@127.0.0.1/%s' % db_name
+        print
+        print "Start Drush Mysql"
+        run("drush site-install standard --db-url=" + mysql_url)
+        print "End Drush mysql"
+        print
+
+
+@task
+def vanilla_site(parent, name, db_name, base_url=None, rewrite_base=None):
+    """Setup a complete, vanilla Drupal install
+
+    Download Drupal, configure the settings.php database file, configure
+    the .htaccess file, and then populate the database with the default
+    Drupal structure.
+
+    Args:
+        parent: Parent directory where the site will be created
+        name: Directory name for the site
+        db_name: Name of the database that will be created for this site
+        base_url: Base URL value to write in the settings.php file.
+            If left blank, this value will remain commented out in settings.php
+        rewrite_base: RewriteBase value to write in the .htaccess file.
+            If left blank, this value will remain commented out in .htaccess
+
+    Usage:
+        $ fab -H 127.0.0.1 vanilla_site:'/path/to/web/dir', 'vanilla', 'drupal_vanilla'
+
+        Will create a site at /path/to/web/dir/vanilla on your local machine.
+        It will create a database called drupal_vanilla, populating with with
+        the base Drupal tables.
+
+        $ fab -H example.com vanilla_site:'/var/www/html', 'special', 'drupal_dev_01', 'http://www.example.com/special', '/special'
+
+        Will create a site at http://example.com/special with the appropriate
+        Apache config options to make it work in a sub-directory. Results
+        will depend on your Apache configuration.
+    """
+
+    # TODO check for trailing slash
+    path = parent + '/' + name
+
+    print _header("Downloading Drupal.")
+    download_drupal(parent, name)
+
+    print _header("Configuring the RewriteBase in the .htaccess file.")
+    rewrite_base_enable(path, name)
+
+    print _header("Making the files directory.")
+    setup_files(path)
+
+    print _header("Creating the database and loading Drupal structure.")
+    setup_settings(path, db_name)
+
+    print _header("Drupal site setup")
+
+    # run("drush dl -y devel backup_migrate")
+    # Send an email as part of the Jenkins build or at least print the URL
+
+
+@task
+def htaccess_exists(path):
+    htaccess = path + '/.htaccess'
+    if exists(htaccess):
+        return True
+    else:
+        return False
+
+
+def rewrite_base_enabled(path):
+    htaccess = path + '/.htaccess'
+    # Look for an existing RewriteBase directive
+    if contains(htaccess, "^.[^#]*RewriteBase \/.*$", escape=False):
+        print 'There is an established RewriteBase directive'
+        return True
+    else:
+        print 'No RewriteBase rule is defined'
+        return False
+
+
+@task
+def rewrite_base_enable(path, name):
+    htaccess = path + '/.htaccess'
+    if htaccess_exists(path):
+        if not rewrite_base_enabled(path):
+            # sed the RewriteBase rule
+            sed(htaccess, "^.*# RewriteBase /$", "  RewriteBase /" + name)
 
 
 def db_create(place, db_name, db_host, db_user, db_pass):
