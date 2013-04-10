@@ -11,6 +11,11 @@ This is alpha code and is actively being developed and might break your systems.
 * Neoprene assumes you have [Drush](http://drupal.org/project/drush) installed on your remote and local systems.
 
 ## Install (required)
+
+### Install Python 
+Links to various tips about this for your OS should go here.
+
+### Install Fabric
 As of 2013_03_28 you'll need the latest dev version of Fabric. There's a bug in the latest solid release that makes `sed` not work on a Mac.
 
 To install the dev version do:
