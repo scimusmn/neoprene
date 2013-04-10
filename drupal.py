@@ -75,8 +75,7 @@ def remote_db_dump(directory):
         r = re.match('Default Database backed up successfully to ([^\s]*) '
                      'in destination Manual Backups Directory in '
                      '[\d]*\.[\d]* ms.',
-                     r
-                    )
+                     r)
         bam_filename = r.group(1) + ".mysql.gz"
 
         # Get the path to the Drupal files directory, silently
