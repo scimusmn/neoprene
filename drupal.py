@@ -8,6 +8,10 @@ import re
 #from pprint import pprint
 
 
+# Source your local environment variables to make Drush work properly
+env.shell = "/bin/bash -l -c -i"
+
+
 def _header(txt):
     wrapper = "------------------------------------------------------"
     return wrapper + "\n" + txt + "\n" + wrapper
