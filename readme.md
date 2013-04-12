@@ -25,3 +25,8 @@ To install the dev version do:
     pip install fabric==dev
 
 Paramiko is a Python SSH library.
+
+# Misc.
+Q: Who's that guy in the picture?
+
+A: Why, that's [Wallace Carothers](http://en.wikipedia.org/wiki/Wallace_Carothers), the organic chemist who invented Nylon and helped lay the groundwork for the invention of Neoprene.
