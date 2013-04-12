@@ -21,15 +21,14 @@ env.shell = "/bin/bash -l -c -i"
 
 @contextmanager
 def _mute():
-    """
-    Run a fabric command without reporting any responses to the user.
-    """
+    """Run a fabric command without reporting any responses to the user. """
     with settings(warn_only='true'):
         with hide('running', 'stdout', 'stderr', 'warnings'):
             yield
 
 
 def _header(txt):
+    """Decorate a string to make it stand out as a header. """
     wrapper = "------------------------------------------------------"
     return blue(wrapper + "\n" + txt + "\n" + wrapper, bold=True)
 
