@@ -1,11 +1,16 @@
+# Fabric modules
 from fabric.api import (abort, cd, env, hide, local, run, settings,
                         task)
 from fabric.contrib.files import (contains, exists, sed)
 from fabric.contrib.console import (confirm)
 from fabric.colors import blue, red, green
+
+# Neoprene modules
 import cache
 import db
 import files
+
+# Python modules
 from contextlib import contextmanager
 import re
 
