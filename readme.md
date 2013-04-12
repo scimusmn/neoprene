@@ -1,7 +1,7 @@
-<img align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.jpg" />
-# Neoprene : Deploy & administer Drupal websites using Fabric
+<img height="300" align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.jpg" />
+# Neoprene:<br />Deploy & administer Drupal websites<br />using Python and Fabric
 
-## Warning
+### Warning
 This is alpha code and is actively being developed and might break your systems. Please test before using on your systems.
 
 ## Usage
