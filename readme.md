@@ -1,4 +1,4 @@
-<img align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.png" />
+<img align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.jpg" />
 # Neoprene : Deploy & administer Drupal websites using Fabric
 
 ## Warning
