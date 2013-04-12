@@ -113,7 +113,7 @@ def download(parent, name=None):
             (default None)
 
     Usage:
-        $ fab -H localhost download:'/path/to/web/dir','vanilla'
+        $ fab -H example.com download:'/path/to/web/dir','vanilla'
 
         Will download the latest Drupal project to /path/to/web/dir/vanilla
     """

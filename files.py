@@ -29,13 +29,13 @@ def enable_rewrite_base(path, base=None):
         base: RewriteBase string to add to the .htaccess file (default: None)
 
     Usage:
-        $ fab -H localhost enable_rewrite_base:'/path/to/web/dir/site-name','site-name'
+        $ fab -H example.com enable_rewrite_base:'/path/to/web/dir/site-name','site-name'
 
         Will modify the .htaccess file at /path/to/web/dir/site-name/.htaccess
         adding this RewriteBase directive:
             RewriteBase /site-name
 
-        $ fab -H localhost rewrite_base_enable:'/path/to/web/dir'
+        $ fab -H example.com rewrite_base_enable:'/path/to/web/dir'
 
         Will modify the .htaccess file at /path/to/web/dir/.htaccess
         adding this RewriteBase directive:
@@ -54,7 +54,7 @@ def setup_files(path):
     Setup the Drupal files directory
 
     Usage:
-        fab -H localhost setup_files:'/path/to/site'
+        fab -H example.com setup_files:'/path/to/site'
     """
     with cd(path):
         # Setup files
@@ -69,7 +69,7 @@ def setup_settings(path, db_name):
     Setup the Drupal settings.php file
 
     Usage:
-        fab -H localhost setup_settings:'/path/to/site'
+        fab -H example.com setup_settings:'/path/to/site'
     """
     path = path + '/sites/default'
     with cd(path):

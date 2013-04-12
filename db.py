@@ -14,7 +14,7 @@ def dump_remote_db(directory):
     """Use Backup and Migrate to make a SQL dump of a website's the Database
 
     Usage:
-        fab -H deployuser@example.com dump_remote_db:'/site/path/'
+        fab -H example.com dump_remote_db:'/site/path/'
 
     Returns:
         The full filepath to the backup
@@ -102,7 +102,7 @@ def pull_db(directory, local_db_host='localhost', local_db_user=None,
     Get a copy of a remote website's db on your local machine.
 
     Usage:
-        fab -H deployuser@example.com pull_db:'/path/to/drupal/site/root'
+        fab -H example.com pull_db:'/path/to/drupal/site/root'
     """
     txt = "Getting a database backup of your remote site."
     print
