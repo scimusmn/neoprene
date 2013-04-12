@@ -10,15 +10,14 @@ import re
 
 
 @task
-def remote_db_dump(directory):
-    """
-    Uses Drush and the Backup and Migrate module to make a SQL dump of the
-    database for the spcified site.
-
-    Returns the full filepath to the backup
+def dump_remote_db(directory):
+    """Use Backup and Migrate to make a SQL dump of a website's the Database
 
     Usage:
         fab -H deployuser@example.com remote_db_dump:'/site/path/'
+
+    Returns:
+        The full filepath to the backup
     """
     with cd(directory):
         o = run("drush bam-backup")
