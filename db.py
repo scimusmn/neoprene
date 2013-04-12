@@ -1,7 +1,12 @@
+# Fabric modules
 from fabric.api import (cd, env, get, local, prompt, run, task)
 from fabric.contrib.files import (exists)
-import re
+
+# Neoprene modules
 import neoprene as neo
+
+# Python modules
+import re
 
 
 @task

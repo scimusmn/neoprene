@@ -1,7 +1,6 @@
 # Fabric modules
-from fabric.api import (abort, cd, env, hide, local, run, settings,
-                        task)
-from fabric.contrib.files import (contains, exists, sed)
+from fabric.api import (cd, env, hide, run, settings, task)
+from fabric.contrib.files import (exists, sed)
 from fabric.contrib.console import (confirm)
 from fabric.colors import blue, red, green
 
@@ -72,23 +71,6 @@ def confirm_overwrite(warning):
         exit('Quiting')
     else:
         pass
-
-
-def rewrite_base_enabled(path):
-    """Check to see if RewriteBase is enabled on a Drupal site
-
-    Args:
-        path: Full path to a Drupal website
-
-    Returns:
-        A boolean. True is RewriteBase is enabled, False if not.
-    """
-    htaccess = path + '/.htaccess'
-    # Look for an existing RewriteBase directive
-    if contains(htaccess, "^.[^#]*RewriteBase \/.*$", escape=False):
-        return True
-    else:
-        return False
 
 
 @task
@@ -166,7 +148,7 @@ def rewrite_base_enable(path, base=None):
     """
     htaccess = path + '/.htaccess'
     if exists(htaccess):
-        if not rewrite_base_enabled(path):
+        if not files.check_rewrite_base_enabled(path):
             # sed the RewriteBase rule
             sed(htaccess, "^.*# RewriteBase /$", "  RewriteBase " + base)
 

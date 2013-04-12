@@ -1,4 +1,23 @@
+# Fabric modules
 from fabric.api import (cd, run, task)
+from fabric.contrib.files import (contains)
+
+
+def check_rewrite_base_enabled(path):
+    """Check to see if RewriteBase is enabled on a Drupal site
+
+    Args:
+        path: Full path to a Drupal website
+
+    Returns:
+        A boolean. True is RewriteBase is enabled, False if not.
+    """
+    htaccess = path + '/.htaccess'
+    # Look for an existing RewriteBase directive
+    if contains(htaccess, "^.[^#]*RewriteBase \/.*$", escape=False):
+        return True
+    else:
+        return False
 
 
 @task
