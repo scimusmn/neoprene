@@ -54,7 +54,7 @@ def local_db_import(local_db_name, local_sql_file, local_db_host='localhost',
         local(db_import_cmd)
 
 
-def db_create(place, db_name, db_host, db_user, db_pass):
+def create(place, db_name, db_host, db_user, db_pass):
     """
     Try to create a database.
 
@@ -75,8 +75,8 @@ def db_create(place, db_name, db_host, db_user, db_pass):
 
 def interactive_create_db(place, db_host, db_user, db_pass):
     """
-    Keep asking the user for a database name until the
-    db_create function stops returning errors.
+    Keep asking the user for a database name until the create function
+    stops returning errors.
     """
     error_code = 1
     while error_code == 1:
@@ -84,8 +84,7 @@ def interactive_create_db(place, db_host, db_user, db_pass):
         txt = "What would you like to call you local database?"
         print
         db_name = prompt(txt)
-        db_response = db_create(place, db_name, db_host, db_user,
-                                db_pass)
+        db_response = create(place, db_name, db_host, db_user, db_pass)
         if db_response.return_code == 1:
             print db_response.stderr
             print
