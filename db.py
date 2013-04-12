@@ -10,11 +10,11 @@ import re
 
 
 @task
-def dump_remote_db(directory):
+def dump_remote(directory):
     """Use Backup and Migrate to make a SQL dump of a website's the Database
 
     Usage:
-        fab -H example.com dump_remote_db:'/site/path/'
+        fab -H example.com dump_remote:'/site/path/'
 
     Returns:
         The full filepath to the backup
