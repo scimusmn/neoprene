@@ -14,7 +14,7 @@ def dump_remote_db(directory):
     """Use Backup and Migrate to make a SQL dump of a website's the Database
 
     Usage:
-        fab -H deployuser@example.com remote_db_dump:'/site/path/'
+        fab -H deployuser@example.com dump_remote_db:'/site/path/'
 
     Returns:
         The full filepath to the backup
