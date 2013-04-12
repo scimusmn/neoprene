@@ -5,7 +5,7 @@
 This is alpha code and is actively being developed and might break your systems. Please test before using on your systems.
 
 ## Usage
-* Include this module in your application's fabfile to utilize these Drupal specific tasks.
+* Include this module in your application's fabfile.py to utilize these Drupal specific tasks.
 
 ## About
 * [Fabric](http://docs.fabfile.org) is a Python library for application deployment and system administration tasks. [Neoprene](https://github.com/scimusmn/neoprene) is a library that aids in common [Drupal](http://www.drupal.org) deployment and system administration tasks, using Fabric.
@@ -25,8 +25,3 @@ To install the dev version do:
     pip install fabric==dev
 
 Paramiko is a Python SSH library.
-<!--Coming soon-->
-
-<!--## TODO-->
-
-
