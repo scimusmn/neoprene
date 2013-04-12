@@ -1,4 +1,4 @@
-<img height="300" align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.jpg" />
+<img width="239" height="300" align="right" alt="Image of Wallace Carothers stretching Neoprene" src="/media/carothers.jpg" />
 # Neoprene:<br />Deploy & administer Drupal websites<br />using Python and Fabric
 
 ### Warning
