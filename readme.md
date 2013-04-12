@@ -29,4 +29,4 @@ Paramiko is a Python SSH library.
 # Misc.
 Q: Who's that guy in the picture?
 
-A: Why, that's [Wallace Carothers](http://en.wikipedia.org/wiki/Wallace_Carothers) stretching a peice of Neoprene. Header's the the organic chemist who invented Nylon and helped lay the groundwork for the invention of Neoprene...the material...not this software.
+A: Why, that's [Wallace Carothers](http://en.wikipedia.org/wiki/Wallace_Carothers) stretching a peice of Neoprene. He's the the organic chemist who invented Nylon and helped lay the groundwork for the invention of Neoprene...the material...not this software.
