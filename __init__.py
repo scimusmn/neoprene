@@ -1,6 +1,6 @@
 # Fabric modules
 from fabric.api import (cd, env, hide, run, settings, task)
-from fabric.contrib.files import (exists, sed)
+from fabric.contrib.files import (exists)
 from fabric.contrib.console import (confirm)
 from fabric.colors import blue, red, green
 
@@ -79,7 +79,6 @@ def site_install(path, db_user, db_pass, db_host, db_name):
 
     Use Drush to setup the Drupal structure in database
 
-
     Args:
         path: Directory of the website
         db_user: Database user to use when creating and running the Drupal site
@@ -123,34 +122,6 @@ def download(parent, name=None):
             run("drush dl")
         else:
             run("drush dl --drupal-project-rename=%s" % name)
-
-
-@task
-def rewrite_base_enable(path, base=None):
-    """Change the RewriteBase variable on a Drupal site
-
-    Args:
-        parent: Path to the website base
-        base: RewriteBase string to add to the .htaccess file (default: None)
-
-    Usage:
-        $ fab -H localhost rewrite_base_enable:'/path/to/web/dir/site-name','site-name'
-
-        Will modify the .htaccess file at /path/to/web/dir/site-name/.htaccess
-        adding this RewriteBase directive:
-            RewriteBase /site-name
-
-        $ fab -H localhost rewrite_base_enable:'/path/to/web/dir'
-
-        Will modify the .htaccess file at /path/to/web/dir/.htaccess
-        adding this RewriteBase directive:
-            RewriteBase /
-    """
-    htaccess = path + '/.htaccess'
-    if exists(htaccess):
-        if not files.check_rewrite_base_enabled(path):
-            # sed the RewriteBase rule
-            sed(htaccess, "^.*# RewriteBase /$", "  RewriteBase " + base)
 
 
 @task
@@ -212,7 +183,7 @@ Do you wish to overwrite?
     download(parent, name)
 
     print _header("Configuring the RewriteBase in the .htaccess file.")
-    rewrite_base_enable(path, rewrite_base)
+    files.enable_rewrite_base(path, rewrite_base)
 
     print _header("Making the files directory and a settings.php file")
     files.setup_files(path)
