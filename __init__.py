@@ -34,8 +34,17 @@ def _header(txt):
 
 
 def _cleanup_drush_output(o):
-    """
-    Cleanup drush output to get raw message string.
+    """Cleanup drush output to get raw message string.
+
+    This is useful when you need to run a regex against a response string
+    and don't want to deal with any of the special formatting and linebreaks
+    that Drush can return
+
+    Args:
+        o: Drush output string
+
+    Returns:
+        Raw response string
     """
     # Remove linebreaks
     r = ' '.join(o.splitlines())
