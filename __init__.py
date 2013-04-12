@@ -56,6 +56,17 @@ def _cleanup_drush_output(o):
 
 
 def confirm_overwrite(warning):
+    """Prompt the user with a noticable warning before overwriting files
+
+    Args:
+        warning: Warning string to be presented to the user. This should
+            include the question string, but not the [y/N] bit. That's
+            added by Fabric's confirm function. Defaults to No.
+
+    Returns:
+        Quits all operations if the user says No.
+        Continues operations with a pass if the user says Yes.
+    """
     answer = confirm(red(warning), default=False)
     if answer is not True:
         exit('Quiting')
