@@ -33,23 +33,6 @@ def _header(txt):
     return blue(wrapper + "\n" + txt + "\n" + wrapper, bold=True)
 
 
-def _which_download_app():
-    """
-    Find the path to a download application, prefering wget.
-    Abort if neither is found.
-    """
-    with _mute():
-        path = local("which wget", True)
-        if path.return_code != 1:
-            return path
-        else:
-            path = local("which curl", True)
-            if path.return_code != 1:
-                return path + " -O"
-            else:
-                abort("Please install wget or curl on your local system.")
-
-
 def _cleanup_drush_output(o):
     """
     Cleanup drush output to get raw message string.
