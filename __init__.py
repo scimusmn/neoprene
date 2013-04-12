@@ -63,14 +63,6 @@ def confirm_overwrite(warning):
         pass
 
 
-def htaccess_exists(path):
-    htaccess = path + '/.htaccess'
-    if exists(htaccess):
-        return True
-    else:
-        return False
-
-
 def rewrite_base_enabled(path):
     """Check to see if RewriteBase is enabled on a Drupal site
 
@@ -162,7 +154,7 @@ def rewrite_base_enable(path, base=None):
             RewriteBase /
     """
     htaccess = path + '/.htaccess'
-    if htaccess_exists(path):
+    if exists(htaccess):
         if not rewrite_base_enabled(path):
             # sed the RewriteBase rule
             sed(htaccess, "^.*# RewriteBase /$", "  RewriteBase " + base)
