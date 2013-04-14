@@ -125,8 +125,8 @@ def download(parent, name=None):
 
 
 @task
-def dev_site(live_path, dev_parent, dev_name, dev_db_name, base_url,
-             rewrite_base):
+def dev_site(live_path, dev_parent='', dev_name='', dev_db_name='',
+             base_url='', rewrite_base=''):
     """Create a dev site by copying an existing live site
 
     Args:
