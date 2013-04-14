@@ -103,7 +103,8 @@ Do you still wish to proceed?
     confirm_overwrite(warning)
 
     with cd(path):
-        run("drush site-install standard --db-url=" + db_url)
+        run("drush site-install standard --db-url=%s --account-name=%s\
+            --account-pass=%s" % (db_url, 'admin', 'admin'))
 
 
 @task
