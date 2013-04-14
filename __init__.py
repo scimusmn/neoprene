@@ -125,6 +125,55 @@ def download(parent, name=None):
 
 
 @task
+def dev_site(live_path, dev_parent, dev_name, dev_db_name, base_url,
+             rewrite_base):
+    """Create a dev site by copying an existing live site
+
+    Args:
+        live_path: The path to the operational live site
+        dev_parent: Parent directory where the dev site will be created
+        dev_name: Directory name for the dev site
+        dev_db_name: Name of the database that will be created for the dev site
+        base_url: Base URL value to write in the dev settings.php file.
+            If left blank, this value will remain commented out in settings.php
+            ( default=None )
+        rewrite_base: RewriteBase value to write in the dev .htaccess file.
+            If left blank, this value will remain commented out in .htaccess
+            ( default=None )
+
+    Usage:
+        $ fab -H example.com dev_site:'/path/to/live/site',\
+        > '/path/to/dev/parent','develop','drupal_dev_01',\
+        > 'http://dev.example.com/develop','/develop'
+    """
+    # cd to the live site
+
+    # Look for an git origin in the live site
+
+    # cd to the dev parent dir and clone the repo from origin
+
+    # switch to the develop branch
+
+    # git fetch
+
+    # git pull origin develop
+
+    # Duplicate the live mysql db as a dev db
+    # Look into cross platform ways to just do the db duplication without
+    # needing to write the db dump file and then do the insert
+
+    # Configure the settings.php and .htaccess files for the dev site
+
+    # Copy the files folder from the live site to the dev site
+    # Eventually there should be a option here for doing read only sym-links
+    # Or maybe some S3 thingy
+
+    # drush cc all on dev
+
+    # done
+
+
+@task
 def vanilla_site(parent, name, db_name, base_url=None, rewrite_base=None):
     """Setup a complete, vanilla Drupal install
 
