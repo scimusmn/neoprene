@@ -2,7 +2,7 @@
 # Neoprene:<br />Deploy & administer Drupal websites<br />using Python and Fabric
 
 ### Warning
-This is alpha code and is actively being developed and might break your systems. Please test before using on your systems.
+This is alpha code and is actively being developed and might break your systems. Please test before using on anything you care about.
 
 ## Usage
 * Include this module in your application's fabfile.py to utilize these Drupal specific tasks.
