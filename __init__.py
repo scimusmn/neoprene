@@ -9,6 +9,9 @@ import cache
 import db
 import files
 
+# Velour modules
+import velour
+
 # Python modules
 from contextlib import contextmanager
 import re
