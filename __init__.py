@@ -10,7 +10,7 @@ import db
 import files
 
 # Velour modules
-import velour
+import velour as git
 
 # Python modules
 from contextlib import contextmanager
@@ -150,7 +150,7 @@ def dev_site(live_path, dev_parent='', dev_name='', dev_db_name='',
         > 'http://dev.example.com/develop','/develop'
     """
     # cd to the live site
-    remote = velour.get_remote_origin(live_path)
+    remote = git.get_remote(live_path)
 
     with cd(dev_parent):
         run('git clone %s %s' % (remote, dev_name))
