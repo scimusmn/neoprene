@@ -1,5 +1,5 @@
 # Fabric modules
-from fabric.api import (cd, env, hide, run, settings, task)
+from fabric.api import (cd, env, hide, prompt, run, settings, task)
 from fabric.contrib.files import (exists)
 from fabric.contrib.console import (confirm)
 from fabric.colors import blue, red, green
@@ -129,7 +129,7 @@ def download(parent, name=None):
 
 
 @task
-def dev_site(live_path, dev_parent='', dev_name='', dev_db_name='',
+def dev_site(live_path, dev_parent, dev_name, dev_db_name='',
              base_url='', rewrite_base=''):
     """Create a dev site by copying an existing live site
 
@@ -150,11 +150,32 @@ def dev_site(live_path, dev_parent='', dev_name='', dev_db_name='',
         > '/path/to/dev/parent','develop','drupal_dev_01',\
         > 'http://dev.example.com/develop','/develop'
     """
-    # cd to the live site
-    remote = git.get_remote(live_path)
+    with _mute():
+        remote = git.get_remote(live_path)
+    dev_path = '%s/%s' % (dev_parent, dev_name)
+    if exists(dev_path):
+        warning = """
+A folder already exists at your destination path.
 
-    with cd(dev_parent):
-        run('git clone %s %s' % (remote, dev_name))
+Do you wish to overwrite it?
+"""
+        confirm_overwrite(warning)
+
+    with _mute():
+        run('rm -rf %s' % dev_path)
+        with cd(dev_parent):
+            run('git clone %s %s' % (remote, dev_name))
+
+    with cd(dev_path):
+        run('git fetch')
+        run('git branch')
+
+        # Ask the user which branch they would like to point the dev site at
+        branch_prompt = """
+Which branch would you like to use for this dev site?"
+"""
+        dev_branch = prompt(branch_prompt)
+        run('git checkout %s' % dev_branch)
 
     # Look for an git origin in the live site
 
