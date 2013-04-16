@@ -170,12 +170,41 @@ Do you wish to overwrite it?
         run('git fetch')
         run('git branch')
 
-        # Ask the user which branch they would like to point the dev site at
-        branch_prompt = """
-Which branch would you like to use for this dev site?"
+        # Determinine a branching strategy
+        strategy_prompt = """
+How would you like to create your dev site:
+1) Use an existing Git branch
+2) Create a new Git branch
+:
 """
-        dev_branch = prompt(branch_prompt)
-        run('git checkout %s' % dev_branch)
+        strategy = prompt(strategy_prompt,
+                          validate=validate_branching_strategy)
+
+        # Checkout an existing branch
+        if strategy == '1':
+            branch_prompt = """
+Which existing branch would you like to use for this dev site?
+"""
+            # TODO - add validation
+            dev_branch = prompt(branch_prompt)
+            run('git checkout %s' % dev_branch)
+            run('git pull origin %s' % dev_branch)
+
+        # Create new branch
+        if strategy == '2':
+            start_branch_prompt = """
+Which branch should we use to start from?
+"""
+            start_branch = prompt(start_branch_prompt)
+            run('git checkout %s' % start_branch)
+            dev_branch_prompt = """
+What would like to name the new dev branch?
+"""
+            dev_branch = prompt(dev_branch_prompt)
+            run('git checkout -b %s' % dev_branch)
+
+
+
 
     # Look for an git origin in the live site
 
@@ -200,6 +229,16 @@ Which branch would you like to use for this dev site?"
     # drush cc all on dev
 
     # done
+
+
+@task
+
+
+def validate_branching_strategy(input):
+    if re.match('^[1-2]$', input):
+        return input
+    else:
+        raise Exception('Please enter either 1 or 2.')
 
 
 @task
