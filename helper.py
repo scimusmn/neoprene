@@ -6,7 +6,7 @@ import re
 
 
 @contextmanager
-def _mute():
+def mute():
     """Run a fabric command without reporting any responses to the user. """
     with settings(warn_only='true'):
         with hide('running', 'stdout', 'stderr', 'warnings'):
