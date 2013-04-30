@@ -13,13 +13,13 @@ def _mute():
             yield
 
 
-def _header(txt):
+def header(txt):
     """Decorate a string to make it stand out as a header. """
     wrapper = "------------------------------------------------------"
     return blue(wrapper + "\n" + txt + "\n" + wrapper, bold=True)
 
 
-def _cleanup_drush_output(o):
+def cleanup_drush_output(o):
     """Cleanup drush output to get raw message string.
 
     This is useful when you need to run a regex against a response string

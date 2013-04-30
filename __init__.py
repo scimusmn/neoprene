@@ -4,6 +4,7 @@ from fabric.contrib.files import (exists)
 from fabric.colors import green
 
 # Neoprene modules
+from helper import header, confirm_overwrite
 import cache
 import db
 import files
@@ -100,7 +101,7 @@ def vanilla_site(parent, name, db_name, base_url=None, rewrite_base=None):
     # TODO check for trailing slash
     path = parent + '/' + name
 
-    print _header("Checking dependencies")
+    print header("Checking dependencies")
     if exists(path):
         warning = """
 A folder already exists at your destination path.
@@ -119,23 +120,23 @@ Do you wish to overwrite?
     else:
         exit('No MySQL credentials were found. Quitting.')
 
-    print _header("Downloading Drupal.")
+    print header("Downloading Drupal.")
     download(parent, name)
 
-    print _header("Configuring the RewriteBase in the .htaccess file.")
+    print header("Configuring the RewriteBase in the .htaccess file.")
     files.enable_rewrite_base(path, rewrite_base)
 
-    print _header("Making the files directory and a settings.php file")
+    print header("Making the files directory and a settings.php file")
     files.setup_files(path)
     files.setup_settings(path, db_name)
 
-    print _header("Creating the database and loading Drupal structure.")
+    print header("Creating the database and loading Drupal structure.")
     site_install(path, 'bkennedy', password, '127.0.0.1', db_name)
 
     with cd(path):
         cache.clear()
 
-    print _header("Your Drupal site is ready to go.")
+    print header("Your Drupal site is ready to go.")
 
     # run("drush dl -y devel backup_migrate")
     # Send an email as part of the Jenkins build or at least print the URL
