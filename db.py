@@ -3,7 +3,7 @@ from fabric.api import (cd, env, get, local, prompt, run, task)
 from fabric.contrib.files import (exists)
 
 # Neoprene modules
-import neoprene as neo
+from . helper import cleanup_drush_output, header, mute
 
 # Python modules
 import re
@@ -21,7 +21,7 @@ def dump_remote_db(directory):
     """
     with cd(directory):
         o = run("drush bam-backup")
-        r = neo._cleanup_drush_output(o)
+        r = cleanup_drush_output(o)
         # Get the backup filename from the response
         r = re.match('Default Database backed up successfully to ([^\s]*) '
                      'in destination Manual Backups Directory in '
@@ -30,7 +30,7 @@ def dump_remote_db(directory):
         bam_filename = r.group(1) + ".mysql.gz"
 
         # Get the path to the Drupal files directory, silently
-        with neo._mute():
+        with mute():
             drupal_files_path = run("drush dd files")
             bam_path = drupal_files_path + "/backup_migrate/manual/"
 
@@ -45,7 +45,7 @@ def local_db_import(local_db_name, local_sql_file, local_db_host='localhost',
     """
     Import a SQL file into a local database
     """
-    with neo._mute():
+    with mute():
         db_import_cmd = "mysql -h %s -u %s" % (local_db_host, local_db_user)
         if local_db_pass is not None:
             db_import_cmd = db_import_cmd + " -p %s" % local_db_pass
@@ -68,7 +68,7 @@ def db_create(place, db_name, db_host, db_user, db_pass):
             pass
         #o = run(create)
         if place == 'local':
-            with neo._mute():
+            with mute():
                 db_response = local(create, True)
                 return db_response
 
@@ -106,10 +106,10 @@ def pull_db(directory, local_db_host='localhost', local_db_user=None,
     """
     txt = "Getting a database backup of your remote site."
     print
-    print neo._header(txt)
+    print header(txt)
     print
 
-    path = remote_db_dump(directory)
+    path = dump_remote_db(directory)
     localpath = get(path, "/tmp")
     gz_file = localpath[0]
     local("gunzip %s" % gz_file)
@@ -117,10 +117,10 @@ def pull_db(directory, local_db_host='localhost', local_db_user=None,
 
     txt = "Importing the database on your local machine."
     print
-    print neo._header(txt)
+    print header(txt)
 
     if local_db_user is None:
-        with neo._mute():
+        with mute():
             local_db_user = local('whoami', True)
 
     print "Writing to your local database using these credentials:"
@@ -163,14 +163,14 @@ def get_mysql_pass():
     """Find out if we have the right information to use MySQL"""
 
     # There is a password file and it has a password in it.
-    with neo._mute():
+    with mute():
         if mysql_cnf_exists() and mysql_cnf_password_set():
             password = run('awk < ~/.my.cnf -F"=" \'{ print $2 }\'')
             return password
 
 
 def mysql_cnf_exists():
-    with neo._mute():
+    with mute():
         if exists('~/.my.cnf'):
             return True
         else:
@@ -179,7 +179,7 @@ def mysql_cnf_exists():
 
 def mysql_cnf_password_set():
     """Check to see if a password is set in my.cnf """
-    with neo._mute():
+    with mute():
         if mysql_cnf_exists():
             if run("grep 'password.*=' < ~/.my.cnf"):
                 return True
