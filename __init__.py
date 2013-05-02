@@ -1,5 +1,5 @@
 # Fabric modules
-from fabric.api import (cd, env, run, task)
+from fabric.api import (cd, env, prompt, run, task)
 from fabric.contrib.files import (exists)
 from fabric.colors import green
 from fabric.helper import mute
