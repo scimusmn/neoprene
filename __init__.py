@@ -97,7 +97,7 @@ def dev_site(live_path, dev_parent, dev_name, dev_db_name='',
         > 'http://dev.example.com/develop','/develop'
     """
     with _mute():
-        remote = git.get_remote(live_path)
+        remote = git.get_remote_url(live_path)
     dev_path = '%s/%s' % (dev_parent, dev_name)
     if exists(dev_path):
         warning = """
