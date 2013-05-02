@@ -148,10 +148,6 @@ What would like to name the new dev branch?
 """
             dev_branch = prompt(dev_branch_prompt)
             run('git checkout -b %s' % dev_branch)
-
-
-
-
     # Look for an git origin in the live site
 
     # cd to the dev parent dir and clone the repo from origin
@@ -177,10 +173,8 @@ What would like to name the new dev branch?
     # done
 
 
-@task
-
-
 def validate_branching_strategy(input):
+    """Validation function for a user prompt in the dev_site recipe"""
     if re.match('^[1-2]$', input):
         return input
     else:
