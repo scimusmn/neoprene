@@ -10,11 +10,11 @@ import re
 
 
 @task
-def dump_remote_db(directory):
+def dump_remote(directory):
     """Use Backup and Migrate to make a SQL dump of a website's the Database
 
     Usage:
-        fab -H example.com dump_remote_db:'/site/path/'
+        fab -H example.com dump_remote:'/site/path/'
 
     Returns:
         The full filepath to the backup
@@ -75,8 +75,8 @@ def db_create(place, db_name, db_host, db_user, db_pass):
 
 def interactive_create_db(place, db_host, db_user, db_pass):
     """
-    Keep asking the user for a database name until the
-    db_create function stops returning errors.
+    Keep asking the user for a database name until the create function
+    stops returning errors.
     """
     error_code = 1
     while error_code == 1:
@@ -84,8 +84,7 @@ def interactive_create_db(place, db_host, db_user, db_pass):
         txt = "What would you like to call you local database?"
         print
         db_name = prompt(txt)
-        db_response = db_create(place, db_name, db_host, db_user,
-                                db_pass)
+        db_response = create(place, db_name, db_host, db_user, db_pass)
         if db_response.return_code == 1:
             print db_response.stderr
             print

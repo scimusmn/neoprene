@@ -1,0 +1,3 @@
+[submodule "velour"]
+	path = velour
+	url = git@github.com:scimusmn/velour.git

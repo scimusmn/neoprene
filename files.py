@@ -43,8 +43,13 @@ def enable_rewrite_base(path, base=None):
     """
     htaccess = path + '/.htaccess'
     if exists(htaccess):
-        if not check_rewrite_base_enabled(path):
-            # sed the RewriteBase rule
+        if check_rewrite_base_enabled(path):
+            print 'RewriteBase is enabled'
+            # RewriteBase is already enabled. Add our path
+            sed(htaccess, "^[ ]*RewriteBase.*$", "  RewriteBase " + base)
+        else:
+            print 'RewriteBase is disabled'
+            # Uncomment RewriteBase and add our path
             sed(htaccess, "^.*# RewriteBase /$", "  RewriteBase " + base)
 
 
