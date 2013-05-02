@@ -62,7 +62,7 @@ def download(parent, name=None):
             (default None)
 
     Usage:
-        $ fab -H example.com download:'/path/to/web/dir','vanilla'
+        $ fab download:'/path/to/web/dir','vanilla'
 
         Will download the latest Drupal project to /path/to/web/dir/vanilla
     """
@@ -91,7 +91,7 @@ def dev_site(live_path, dev_parent, dev_name, dev_db_name='',
             ( default=None )
 
     Usage:
-        $ fab -H example.com dev_site:'/path/to/live/site',\
+        $ fab dev_site:'/path/to/live/site',\
         > '/path/to/dev/parent','develop','drupal_dev_01',\
         > 'http://dev.example.com/develop','/develop'
     """
