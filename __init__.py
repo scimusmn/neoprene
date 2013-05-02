@@ -2,6 +2,7 @@
 from fabric.api import (cd, env, run, task)
 from fabric.contrib.files import (exists)
 from fabric.colors import green
+from fabric.helper import mute
 
 # Neoprene modules
 from helper import header, confirm_overwrite
@@ -94,7 +95,7 @@ def dev_site(live_path, dev_parent, dev_name, dev_db_name='',
         > '/path/to/dev/parent','develop','drupal_dev_01',\
         > 'http://dev.example.com/develop','/develop'
     """
-    with _mute():
+    with mute():
         remote = git.get_remote_url(live_path)
     dev_path = '%s/%s' % (dev_parent, dev_name)
     if exists(dev_path):
@@ -105,7 +106,7 @@ Do you wish to overwrite it?
 """
         confirm_overwrite(warning)
 
-    with _mute():
+    with mute():
         run('rm -rf %s' % dev_path)
         with cd(dev_parent):
             run('git clone %s %s' % (remote, dev_name))
