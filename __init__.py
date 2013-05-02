@@ -200,13 +200,15 @@ def vanilla_site(parent, name, db_name, base_url=None, rewrite_base=None):
             ( default=None )
 
     Usage:
-        $ fab -H 127.0.0.1 vanilla_site:'/path/to/web/dir','vanilla','drupal_vanilla'
+        $ fab -H 127.0.0.1 vanilla_site:'/path/to/web/dir',\
+        > 'vanilla','drupal_vanilla'
 
         Will create a site at /path/to/web/dir/vanilla on your local machine.
         It will create a database called drupal_vanilla, populating with with
         the base Drupal tables.
 
-        $ fab -H example.com vanilla_site:'/var/www/html,'special','drupal_dev_01','http://www.example.com/special','/special'
+        $ fab -H example.com vanilla_site:'/var/www/html,'special',\
+        > 'drupal_dev_01','http://www.example.com/special','/special'
 
         Will create a site at http://example.com/special with the appropriate
         Apache config options to make it work in a sub-directory. Results
