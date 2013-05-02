@@ -1,8 +1,7 @@
 # Fabric modules
 from fabric.api import (cd, env, run, task)
 from fabric.contrib.files import (exists)
-from fabric.contrib.console import (confirm)
-from fabric.colors import blue, red, green
+from fabric.colors import green
 
 # Neoprene modules
 from helper import header, confirm_overwrite
@@ -14,7 +13,6 @@ import files
 import velour as git
 
 # Python modules
-from contextlib import contextmanager
 import re
 
 
