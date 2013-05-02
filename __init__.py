@@ -2,10 +2,9 @@
 from fabric.api import (cd, env, prompt, run, task)
 from fabric.contrib.files import (exists)
 from fabric.colors import green
-from fabric.helper import mute
 
 # Neoprene modules
-from helper import header, confirm_overwrite
+from helper import confirm_overwrite, header, mute
 import cache
 import db
 import files
